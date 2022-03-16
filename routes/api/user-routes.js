@@ -56,6 +56,7 @@ router.put("/:id", (req, res) => {
   // if req.body has exact key/value pairs to match the model, you can just use `req.body` instead
   User.update(req.body, {
     // update accepts 2 arguments: 1 is what data to update, 2 is what to update it to.
+    individualHooks: true, // allows the route to make updates to password
     where: {
       id: req.params.id,
     },
