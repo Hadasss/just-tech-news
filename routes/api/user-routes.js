@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const User = require("../../models/User");
+const { Post, User, Vote, Comment } = require("../../models");
 
 // GET /api/users
 router.get("/", (req, res) => {
@@ -21,6 +21,26 @@ router.get("/:id", (req, res) => {
     where: {
       id: req.params.id,
     },
+    include: [
+      {
+        model: Post,
+        attributes: ["id", "title", "post_url", "created_at"],
+      },
+      {
+        model: Comment,
+        attributes: ["id", "comment_text", "created_at"],
+        include: {
+          model: Post,
+          attributes: ["title"],
+        },
+      },
+      {
+        model: Post,
+        attributes: ["title"],
+        through: Vote,
+        as: "voted_posts",
+      },
+    ],
   })
     .then((dbUserData) => {
       if (!dbUserData) {
@@ -60,8 +80,6 @@ router.post("/login", (req, res) => {
       res.status(400).json({ message: "No user with that email address!" });
       return;
     }
-    // res.json({ user: dbUserData });
-
     // verify user
     const validPassword = dbUserData.checkPassword(req.body.password);
     if (!validPassword) {
