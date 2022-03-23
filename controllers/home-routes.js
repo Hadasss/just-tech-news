@@ -3,6 +3,7 @@ const sequelize = require("../config/connection");
 const { Post, User, Comment } = require("../models");
 
 router.get("/", (req, res) => {
+  console.log(req.session);
   Post.findAll({
     attributes: [
       "id",
@@ -35,11 +36,20 @@ router.get("/", (req, res) => {
       console.log(dbPostData[0]);
       // pass a single post object into the homepage template
       const posts = dbPostData.map((post) => post.get({ plain: true }));
+      // in the res.render() >> the first argument is the name of the handlebars that displays the html template, the second argument is the data that we want to draw from the model.
       res.render("homepage", { posts });
     })
     .catch((err) => {
       res.status(500).json(err);
     });
+});
+
+router.get("/login", (req, res) => {
+  if (req.session.loggedIn) {
+    res.redirect("/");
+    return;
+  }
+  res.render("login");
 });
 
 module.exports = router;
