@@ -37,7 +37,7 @@ router.get("/", (req, res) => {
       // pass a single post object into the homepage template
       const posts = dbPostData.map((post) => post.get({ plain: true }));
       // in the res.render() >> the first argument is the name of the handlebars that displays the html template, the second argument is the data that we want to draw from the model.
-      res.render("homepage", { posts });
+      res.render("homepage", { posts, loggedIn: req.session.loggedIn });
     })
     .catch((err) => {
       res.status(500).json(err);
@@ -93,7 +93,7 @@ router.get("/post/:id", (req, res) => {
       const post = dbPostData.get({ plain: true });
 
       // pass data to template:
-      res.render("single-post", { post });
+      res.render("single-post", { post, loggedIn: req.session.loggedIn });
     })
     .catch((err) => {
       console.log(err);
