@@ -1,6 +1,8 @@
 # just-tech-news
 
 ## Technologies:
-MySQL, JawsDB
+MySQL, sequelize, JawsDB
 Express.js
+handlebars
 ORM
+
